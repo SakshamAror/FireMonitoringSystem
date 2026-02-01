@@ -11,6 +11,8 @@ load_dotenv()
 api_key = os.getenv("EYEPOP_API_KEY")
 print(f"Using API key: {api_key}")
 
+threshold = 0.7  # Threshold for criticality index to trigger high-risk script
+
 example_image_path = './test/fire.661.png'
 objectOfInterest = 'Person'
 questionList = (
@@ -21,8 +23,13 @@ questionList = (
 
 # Routes to YOLO model
 def route_to_different_model(image_path):
-    print("Running local model instead")
+    print("EyePop failed, running local model instead...")
     # Run Yolo model here, inputting image_path
+
+# Function to call another Python script for high-risk images
+def call_high_risk_script(image_path):
+    print("High Danger found, triggering local YOLOv8 model for real-time monitoring...")
+    # Run Yolo model here
 
 with EyePopSdk.workerEndpoint(
     api_key=api_key
@@ -49,7 +56,14 @@ with EyePopSdk.workerEndpoint(
         result = endpoint.upload(example_image_path).predict()
         print(json.dumps(result, indent=4))
         if "classes" in result and len(result["classes"]) > 1:
-            print(result["classes"][1]['classLabel'])
+            class_label = result["classes"][1]['classLabel']
+            print("Criticality Index: " + class_label)
+            try:
+                index_value = float(class_label)
+                if index_value > threshold:
+                    call_high_risk_script(example_image_path)
+            except ValueError:
+                print(f"Criticality index is not a number: {class_label}")
         else:
             print("Class label not found, routing to different script.")
             route_to_different_model(example_image_path)
