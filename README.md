@@ -1,5 +1,7 @@
 # FireMonitoringSystem
 
+This project was created for SanD Hacks 2026. Project slides: [Google Slides](https://docs.google.com/presentation/d/1AteQAGyVEPVRSyoCuTex-Orl-zHkroUQc2XzN0-jZoE/edit?slide=id.g3bc8ce4fec2_1_84#slide=id.g3bc8ce4fec2_1_84)
+
 Our AI-driven multi-model fire risk detection system combines two complementary computer vision models to identify growing fires and detect people at risk in a timely manner, enabling first responders to intervene before harm occurs.
 
 The system will operate in two stages. First, a custom EyePop.ai cloud-hosted model will analyze images captured from video streams (e.g., CCTV feeds) at five-minute intervals. This model computes a criticality index on a scale from 0 to 1, representing the likelihood that a person is in danger due to fire or smoke. If the criticality index reaches 0.7 or higher, the scene is flagged as High Danger.
