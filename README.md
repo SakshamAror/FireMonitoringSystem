@@ -1,6 +1,6 @@
 # FireMonitoringSystem
 
-This project was created for SanD Hacks 2026. Project slides: [Google Slides]([https://docs.google.com/presentation/d/1AteQAGyVEPVRSyoCuTex-Orl-zHkroUQc2XzN0-jZoE/edi](https://docs.google.com/presentation/d/1AteQAGyVEPVRSyoCuTex-Orl-zHkroUQc2XzN0-jZoE/edit?slide=id.g4dfce81f19_0_45#slide=id.g4dfce81f19_0_45))
+This project was created for SanD Hacks 2026. Project slides: [Google Slides](https://docs.google.com/presentation/d/1AteQAGyVEPVRSyoCuTex-Orl-zHkroUQc2XzN0-jZoE/edit?slide=id.g4dfce81f19_0_45#slide=id.g4dfce81f19_0_45)
 
 Our AI-driven multi-model fire risk detection system combines two complementary computer vision models to identify growing fires and detect people at risk in a timely manner, enabling first responders to intervene before harm occurs.
 
