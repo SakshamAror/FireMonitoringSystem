@@ -5,6 +5,10 @@ from eyepop import EyePopSdk
 from eyepop.worker.worker_types import Pop, InferenceComponent
 import json
 from dotenv import load_dotenv
+import random
+import glob
+from PIL import Image
+import matplotlib.pyplot as plt
 
 load_dotenv()
 
@@ -13,7 +17,11 @@ print(f"Using API key: {api_key}")
 
 threshold = 0.7  # Threshold for criticality index to trigger high-risk script
 
-example_image_path = './test/fire.661.png'
+test_images = glob.glob('./test/*')
+if not test_images:
+    raise FileNotFoundError("No images found in the ./test folder.")
+example_image_path = random.choice(test_images)
+
 objectOfInterest = 'Person'
 questionList = (
     "Is there a person in the image (Yes/No), "
@@ -57,13 +65,42 @@ with EyePopSdk.workerEndpoint(
         print(json.dumps(result, indent=4))
         if "classes" in result and len(result["classes"]) > 1:
             class_label = result["classes"][1]['classLabel']
-            print("Criticality Index: " + class_label)
+            print("Criticality Index: " + str(class_label))
+
             try:
                 index_value = float(class_label)
-                if index_value > threshold:
-                    call_high_risk_script(example_image_path)
+                is_high_danger = index_value >= threshold
             except ValueError:
+                index_value = None
+                is_high_danger = False
                 print(f"Criticality index is not a number: {class_label}")
+
+            print(f"Selected test image: {example_image_path}")
+            img = Image.open(example_image_path)
+            plt.imshow(img)
+            plt.axis('off')
+
+            if index_value is None:
+                danger_text = "INVALID SCORE"
+            elif index_value <= 0.5:
+                danger_text = "LOW DANGER"
+            elif index_value < threshold:
+                danger_text = "MODERATE DANGER"
+            else:
+                danger_text = "HIGH DANGER"
+
+            subtitle = (
+                f"Criticality Index: {index_value:.3f}\nStatus: {danger_text}"
+                if index_value is not None
+                else "Criticality Index: Invalid"
+            )
+
+            plt.title("Selected Test Image")
+            plt.figtext(0.5, 0.01, subtitle, ha="center", fontsize=11)
+            plt.show()
+
+            if is_high_danger:
+                call_high_risk_script(example_image_path)
         else:
             print("Class label not found, routing to different script.")
             route_to_different_model(example_image_path)
